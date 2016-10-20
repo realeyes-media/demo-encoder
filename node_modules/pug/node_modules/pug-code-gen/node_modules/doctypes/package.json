@@ -1,0 +1,67 @@
+{
+  "name": "doctypes",
+  "version": "1.1.0",
+  "description": "Shorthands for commonly used doctypes",
+  "keywords": [
+    "doctype"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pugjs/doctypes.git"
+  },
+  "author": {
+    "name": "ForbesLindesay"
+  },
+  "license": "MIT",
+  "gitHead": "0b70cb5191ec338f15bc91d37efef3a010c06cfe",
+  "bugs": {
+    "url": "https://github.com/pugjs/doctypes/issues"
+  },
+  "homepage": "https://github.com/pugjs/doctypes#readme",
+  "_id": "doctypes@1.1.0",
+  "_shasum": "ea80b106a87538774e8a3a4a5afe293de489e0a9",
+  "_from": "doctypes@>=1.1.0 <2.0.0",
+  "_npmVersion": "3.10.5",
+  "_nodeVersion": "6.3.1",
+  "_npmUser": {
+    "name": "timothygu",
+    "email": "timothygu99@gmail.com"
+  },
+  "dist": {
+    "shasum": "ea80b106a87538774e8a3a4a5afe293de489e0a9",
+    "tarball": "https://registry.npmjs.org/doctypes/-/doctypes-1.1.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "alubbe",
+      "email": "npm@lubbe.org"
+    },
+    {
+      "name": "bloodyowl",
+      "email": "mlbli@me.com"
+    },
+    {
+      "name": "forbeslindesay",
+      "email": "forbes@lindesay.co.uk"
+    },
+    {
+      "name": "jbnicolai",
+      "email": "jappelman@xebia.com"
+    },
+    {
+      "name": "timothygu",
+      "email": "timothygu99@gmail.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/doctypes-1.1.0.tgz_1470804280582_0.3825032275635749"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/doctypes/-/doctypes-1.1.0.tgz"
+}
