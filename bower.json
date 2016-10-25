@@ -1,0 +1,22 @@
+{
+  "name": "demo-encoder",
+  "description": "mini encoder project for demonstration",
+  "main": "app.js",
+  "authors": [
+    "Philip Moss <phil@realeyes.com>"
+  ],
+  "license": "RealEyes Media, LLC",
+  "homepage": "http://realeyes.com/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.7",
+    "less": "^2.7.1",
+    "bootstrap-fileinput": "^4.3.5"
+  }
+}

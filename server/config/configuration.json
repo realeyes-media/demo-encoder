@@ -1,13 +1,10 @@
 {
 	"defaultEncode": {
 		"type": "default",
-		"inputOptions": ["-report"],
 		"fps": "29.97",
 		"outputType": "m3u8",
-		"inputURI": "media/testing05_1475017553126_1000.mp4",
-		"outputDir": "media/output",
-		"fileName": "outputVideo",
 		"bitrates": [1000, 386, 200]
 	},
+	"outputDir": "media/output",
 	"bucketName": "demo-encoder"
 }

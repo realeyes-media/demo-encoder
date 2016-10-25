@@ -5,6 +5,7 @@ var _ = require('lodash');
 var async = require('async');
 var q = require('q');
 var constants = require('../control/workflow-constants');
+var status = require('../control/status');
 var debug = require('debug')('demo-encoder:encoder');
 var path = require('path');
 var fs = require('fs');
@@ -12,13 +13,14 @@ var fs = require('fs');
 // Encode HLS videos
 exports.encodeHls = function(options, callback) {
 	// Iterate through each bitrate
+	status.updateStatusObject(options.statusURI, 'Encoding videos')
 	async.eachOf(options.outputDirs, function(directory, key, cb) {
 
 		// Set up ffmpeg options for HLS encode
 		var input = {};
 		var output = {};
 		var bitrate = options.bitrates[key];
-		input.inputOptions = options.inputOptions;
+		input.inputOptions = ['-report'];
 		output.outputOptions = ["-hls_time 8", "-hls_list_size 0", "-bsf:v h264_mp4toannexb", "-threads 0"];
 		input.inputURI = path.join(__dirname, '../../' + options.inputURI);
 		output.outputURI = directory + '/' + options.fileName + options.timestamp + '_' + bitrate + '.' + options.outputType;

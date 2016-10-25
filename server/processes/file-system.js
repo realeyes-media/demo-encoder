@@ -7,9 +7,11 @@ var async = require('async');
 var debug = require('debug')('demo-encoder:file-system');
 var path = require('path');
 var config = require('../config/configuration.json');
+var status = require('../control/status');
 
 // Create all directories needed for workflow
 exports.createDirs = function(options, callback) {
+	status.updateStatusObject(options.statusURI, 'Creating Directories');
 	return function(callback) {
 		options.outputDirectory = path.join(__dirname, ('../../' + options.outputDir + options.timestamp));
 

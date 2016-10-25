@@ -13,10 +13,12 @@ AWS.util.date.getDate = function() {
 };
 var s3 = new AWS.S3();
 var config = require('../config/configuration.json');
+var status = require('../control/status');
 var bucketName = config.bucketName;
 
 // Kick off and manage s3 upload process
 exports.s3Upload = function(options, callback) {
+	status.updateStatusObject(options.statusURI, 'Uploading videos to storage');
 	if (options.outputType === 'm3u8') {
 
 		// List of tasks for m3u8 s3 upload
