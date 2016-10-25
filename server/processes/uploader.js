@@ -1,3 +1,23 @@
+/* Copyright (C) [2003] - [2016] RealEyes Media, LLC - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by RealEyes Media, October 2016
+ *
+ * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+ * EITHER EXPRESSED OR IMPLIED,  INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of RealEyes Media, LLC and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to RealEyes Media, LLC
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from RealEyes Media, LLC.
+ */
+
 /* MODULE FOR UPLOADING FILES TO STORAGE */
 
 var _ = require('lodash');
@@ -7,7 +27,10 @@ var fs = require('fs');
 var q = require('q');
 var async = require('async');
 var AWS = require('aws-sdk');
-AWS.config.loadFromPath(path.join(__dirname, '../config/aws-config.json' ));
+var awsConfig = require('../config/aws-config.json');
+if (awsConfig.accessKeyId.length > 0) {
+	AWS.config.loadFromPath(path.join(__dirname, '../config/aws-config.json' ));
+}
 AWS.util.date.getDate = function() {
   return new Date(new Date().getTime());
 };
@@ -33,8 +56,7 @@ exports.s3Upload = function(options, callback) {
 				callback(error);
 			} else {
 				// Completed S3 uploads
-				debug('Completed uploading all assets');
-				debug(options.signedUrls);
+				debug('Completed uploading all assets for ' + options.statusURI);
 				callback(null, options);
 			}
 		});
@@ -51,7 +73,7 @@ function getHlsFiles(options, callback) {
 		// local paths
 		options.uploadFilePaths = [options.manifestLocation];
 		// remote paths
-		options.remoteFilePaths = [options.timestamp + '/' + options.files[0]];
+		options.remoteFilePaths = [options.reverseTimestamp + '/' + options.files[0]];
 		async.eachOf(options.outputDirs, function(directory, key, cb) {
 			fs.readdir(directory, function(err, files) {
 				if (err) {
@@ -61,7 +83,7 @@ function getHlsFiles(options, callback) {
 					options.files = options.files.concat(files);
 					// Add remote prefix to files
 					_.forEach(files, function(file, i) {
-						options.remoteFilePaths.push(options.timestamp + '/' + options.bitrates[key] + '/' + file);
+						options.remoteFilePaths.push(options.reverseTimestamp + '/' + options.bitrates[key] + '/' + file);
 						options.uploadFilePaths.push(directory + '/' + file);
 					});
 					cb();
@@ -131,6 +153,7 @@ function upload(file, remotePath) {
 function getRemotePaths(options, callback) {
 	options.signedUrls = [];
 	async.each(options.remotePaths, function(file, cb) {
+		// Expires in 1 year (Max value)
 		var params = {Bucket: bucketName, Key: file, Expires: 31556926};
 		s3.getSignedUrl('getObject', params, function(err, url) {
 			if (err) {

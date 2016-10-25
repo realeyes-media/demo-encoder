@@ -3,8 +3,10 @@
 		"type": "default",
 		"fps": "29.97",
 		"outputType": "m3u8",
-		"bitrates": [1000, 386, 200]
+		"bitrates": [1000, 386, 200],
+		"fragmentSize": 8
 	},
 	"outputDir": "media/output",
-	"bucketName": "demo-encoder"
+	"bucketName": "demo-encoder",
+	"cleanup": false
 }

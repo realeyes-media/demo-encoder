@@ -1,3 +1,23 @@
+/* Copyright (C) [2003] - [2016] RealEyes Media, LLC - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by RealEyes Media, October 2016
+ *
+ * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+ * EITHER EXPRESSED OR IMPLIED,  INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of RealEyes Media, LLC and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to RealEyes Media, LLC
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from RealEyes Media, LLC.
+ */
+
 /* MODULE FOR OVERSEEING THE ENCODING WORKFLOW */
 
 var async = require('async');
@@ -22,16 +42,17 @@ exports.workflowInit = function(options, res) {
 	}
 }
 
+/* Manages all workflow tasks */
 function workflowManager(workflow) {
 	// Run workflow tasks
 	async.waterfall(workflow, function (error, options) {
 		if (error) {
 			// Parent error callback
 			debug(error);
+			status.updateStatusObject(options.statusURI, error.message);
 		} else {
 			// Completed Workflow
-			debug('we did it fam');
-			// Clean up ram a bit
+			debug('Workflow for ' + options.statusURI + ' complete');
 			status.updateStatusObject(options.statusURI, options.signedUrls);
 		}
 	});
@@ -40,28 +61,39 @@ function workflowManager(workflow) {
 /* Set workflow type */
 function setWorkflow(options) {
 	options.timestamp = Date.now();
+	options.reverseTimestamp = getReverseTimestamp();
 	options.outputDir = config.outputDir;
 	options.statusURI = options.fileName + options.timestamp;
+	var workflow;
 	switch (options.type) {
 		case workflowConstants.DEFAULT: {
 			for (var key in config.defaultEncode) {
-				options[key] = config.defaultEncode[key];
+				options[key] = config.defaultEncode[key];				
 			}
 			// Workflow tasks
-			return [
+			workflow = [
 				fileSystem.createDirs(options),
 				encoder.encodeHls,
 				uploader.s3Upload
 			]
+			if (config.cleanup) {
+				workflow.push(fileSystem.cleanup);
+			}
+			return workflow
 			break;
 		}
 		case workflowConstants.ENCODE_HLS: {
 			options.outputType = 'm3u8';
-			return [
+			// Workflow tasks
+			workflow = [
 				fileSystem.createDirs(options),
 				encoder.encodeHls,
 				uploader.s3Upload
 			]
+			if (config.cleanup) {
+				workflow.push(fileSystem.cleanup);
+			}
+			return workflow
 			break;
 		}
 		default: {
@@ -69,4 +101,21 @@ function setWorkflow(options) {
 			break;
 		}
 	}
+}
+
+/* Create a reverse timestamp for S3 performance */
+function getReverseTimestamp() {
+    var date = new Date();
+    var millseconds = addZero(date.getMilliseconds() % 100);
+    var seconds = addZero(date.getSeconds());
+    var minutes = addZero(date.getMinutes());
+    var hour = addZero(date.getHours());
+    var day = addZero(date.getDate());
+    var month = addZero(date.getMonth());
+    var year = addZero(date.getFullYear() % 100);
+    return millseconds + seconds + minutes + hour + day + month + year;
+}
+
+function addZero(n) {
+    return n > 9 ? "" + n : "0" + n;
 }

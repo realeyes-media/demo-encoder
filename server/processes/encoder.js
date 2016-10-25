@@ -1,3 +1,23 @@
+/* Copyright (C) [2003] - [2016] RealEyes Media, LLC - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by RealEyes Media, October 2016
+ *
+ * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+ * EITHER EXPRESSED OR IMPLIED,  INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of RealEyes Media, LLC and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to RealEyes Media, LLC
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from RealEyes Media, LLC.
+ */
+
 /* MODULE FOR ENCODING VIDEOS USING FFMPEG */
 
 var ffmpeg = require('fluent-ffmpeg');
@@ -21,7 +41,7 @@ exports.encodeHls = function(options, callback) {
 		var output = {};
 		var bitrate = options.bitrates[key];
 		input.inputOptions = ['-report'];
-		output.outputOptions = ["-hls_time 8", "-hls_list_size 0", "-bsf:v h264_mp4toannexb", "-threads 0"];
+		output.outputOptions = ["-hls_time " + options.fragmentSize, "-hls_list_size 0", "-bsf:v h264_mp4toannexb", "-threads 0"];
 		input.inputURI = path.join(__dirname, '../../' + options.inputURI);
 		output.outputURI = directory + '/' + options.fileName + options.timestamp + '_' + bitrate + '.' + options.outputType;
 		options.outputURI = output.outputURI;
@@ -42,7 +62,7 @@ exports.encodeHls = function(options, callback) {
 			callback(error);
 		} else {
 			// All encodes finished
-			debug("Successfully encoded videos");
+			debug("Successfully encoded videos for " + options.statusURI);
 			createManifest(options)
 			.then(function(options) {
 				callback(null, options);
