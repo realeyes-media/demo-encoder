@@ -19,6 +19,7 @@
 
 ### On mac ###
 * Run project with $ npm start
+
 ### On windows ###
 * Set your DEBUG environment variable to demo-encoder:*  (set DEBUG=demo-encoder:*)
 * Run the app with node ./bin/www
