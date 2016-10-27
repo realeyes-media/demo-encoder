@@ -25,7 +25,7 @@ $('#upload').submit(function ( e ) {
 
 $( "#upload-button" ).click(function() {
   $( "#upload" ).submit();
-  $('#complete').html('Uploading video');
+  $('#status').html('<li class="list-group-item">Uploading video</li>');
 });
 
 $(function(){
