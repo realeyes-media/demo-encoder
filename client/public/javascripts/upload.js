@@ -25,7 +25,7 @@ $('#upload').submit(function ( e ) {
 
 $( "#upload-button" ).click(function() {
   $( "#upload" ).submit();
-  $('#complete').html('');
+  $('#complete').html('Uploading video');
 });
 
 $(function(){

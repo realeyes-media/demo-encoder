@@ -41,11 +41,10 @@ exports.encodeHls = function(options, callback) {
 		var output = {};
 		var bitrate = options.bitrates[key];
 		input.inputOptions = ['-report'];
-		output.outputOptions = ["-hls_time " + options.fragmentSize, "-hls_list_size 0", "-bsf:v h264_mp4toannexb", "-threads 0"];
+		output.outputOptions = ["-hls_time " + options.fragmentSize, "-hls_list_size 0", "-bsf:v h264_mp4toannexb", "-threads 0", '-b:v ' + bitrate + 'k', '-r ' + options.fps];
 		input.inputURI = path.join(__dirname, '../../' + options.inputURI);
 		output.outputURI = directory + '/' + options.fileName + options.timestamp + '_' + bitrate + '.' + options.outputType;
 		options.outputURI = output.outputURI;
-		output.outputOptions.push('-b:v ' + bitrate + 'k', '-r ' + options.fps);
 
 		// Use options to call ffmpeg executions in parallel
 		executeFfmpeg(input, output)
