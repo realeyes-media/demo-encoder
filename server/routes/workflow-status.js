@@ -31,7 +31,7 @@ router.get('/poll/:statusURI', function(req, res, next) {
 	if (status.statusObject[req.params.statusURI]) {
 		res.send(status.statusObject[req.params.statusURI])
 	} else {
-		res.send('Uploading video');
+		res.send({status: 'Uploading video'});
 	}
 });
 

@@ -20,11 +20,19 @@
 
 exports.statusObject = {};
 
-exports.updateStatusObject = function(inputURI, status) {
+exports.updateStatusObject = function(inputURI, status, complete, error) {
 	if (!exports.statusObject[inputURI]) {
-		exports.statusObject[inputURI] = '';
+		exports.statusObject[inputURI] = {};
 	}
 
-	exports.statusObject[inputURI] = status;
+	exports.statusObject[inputURI].status = status;
+	if (complete) {
+		exports.statusObject[inputURI].complete = true;
+	}
+	if (error) {
+		exports.statusObject[inputURI].error = true;
+	}
+
+	console.log(exports.statusObject);
 
 }

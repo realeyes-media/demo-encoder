@@ -1,13 +1,13 @@
 extends layout
 
 block content
-  form#upload(action='http://localhost:3000/', method='POST', enctype='multipart/form-data')
+  form#upload(method='POST', enctype='multipart/form-data')
     .form-group
-      label(for='exampleInputEmail1') FPS
-      input#exampleInputEmail1.form-control(name='fps', type='text', aria-describedby='emailHelp', placeholder='29.97')
+      label(for='fps') FPS
+      input#fps.form-control(name='fps', type='text', aria-describedby='emailHelp', placeholder='29.97')
     .form-group
       label(for='exampleSelect2') Select Bitrates
-      select#exampleSelect2.form-control(multiple='', name='bitrates')
+      select#bitrates.form-control(multiple='', name='bitrates')
         option 1000
         option 386
         option 200
@@ -15,12 +15,17 @@ block content
       label(for='exampleSelect1') Fragment Size
       select#1-100.form-control(name='fragmentSize')
     .form-group
-      label(for='exampleSelect1') Output Type
-      select#exampleSelect1.form-control(name='outputType')
+      label(for='outputType') Output Type
+      select#outputType.form-control(name='outputType')
         option Default
         option HLS
         option MP4
     .form-group
       label.control-label Select File
       input#input-1.file(type='file', name='file')
-    button.btn.btn-primary#upload-button(type='submit') Submit
+    div.btn.btn-primary#upload-button(type='submit') Submit
+  p
+  ol.list-group#status
+  h2.text-center#complete
+
+  script(src='/javascripts/upload.js')

@@ -33,27 +33,25 @@ var status = require('./status');
 /* Initialize encoding workflow */
 exports.workflowInit = function(options, res) {
 	var workflow = setWorkflow(options);
-	debug(options);
 	if (_.isError(workflow)) {
 		res.status(400).json( { success: false, error: workflow } ); 
 	} else {
 		workflowManager(workflow);
-		res.status(200).render( 'workflow-status' );
+		res.status(200).json( { success: true, statusURI: options.statusURI } );
 	}
 }
 
 /* Manages all workflow tasks */
 function workflowManager(workflow) {
 	// Run workflow tasks
-	async.waterfall(workflow, function (error, options) {
+	async.waterfall(workflow.workflow, function (error, options) {
 		if (error) {
 			// Parent error callback
-			debug(error);
-			status.updateStatusObject(options.statusURI, error.message);
+			status.updateStatusObject(workflow.statusURI, 'Error: ' + error.message, true, true);
 		} else {
 			// Completed Workflow
 			debug('Workflow for ' + options.statusURI + ' complete');
-			status.updateStatusObject(options.statusURI, options.signedUrls);
+			status.updateStatusObject(options.statusURI, options.signedUrls, true);
 		}
 	});
 }
@@ -64,20 +62,21 @@ function setWorkflow(options) {
 	options.reverseTimestamp = getReverseTimestamp();
 	options.outputDir = config.outputDir;
 	options.statusURI = options.fileName + options.timestamp;
-	var workflow;
+	var workflow = {};
+	workflow.statusURI = options.statusURI;
 	switch (options.type) {
 		case workflowConstants.DEFAULT: {
 			for (var key in config.defaultEncode) {
 				options[key] = config.defaultEncode[key];				
 			}
 			// Workflow tasks
-			workflow = [
+			workflow.workflow = [
 				fileSystem.createDirs(options),
 				encoder.encodeHls,
 				uploader.s3Upload
 			]
 			if (config.cleanup) {
-				workflow.push(fileSystem.cleanup);
+				workflow.workflow.push(fileSystem.cleanup);
 			}
 			return workflow
 			break;
@@ -85,13 +84,13 @@ function setWorkflow(options) {
 		case workflowConstants.ENCODE_HLS: {
 			options.outputType = 'm3u8';
 			// Workflow tasks
-			workflow = [
+			workflow.workflow = [
 				fileSystem.createDirs(options),
 				encoder.encodeHls,
 				uploader.s3Upload
 			]
 			if (config.cleanup) {
-				workflow.push(fileSystem.cleanup);
+				workflow.workflow.push(fileSystem.cleanup);
 			}
 			return workflow
 			break;
