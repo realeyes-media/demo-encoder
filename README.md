@@ -9,7 +9,7 @@
 * Install bower and run npm install
 * $ npm install -g bower
 * $ npm install
-* Update /server/config/aws-config.json with your aws access key and secret key for S3 uploading.
+* Update /server/config/aws-config.json.template with your aws access key and secret key for S3 uploading. Then rename the file to aws-config.json
 
 ### How do I run the app? ###
 
