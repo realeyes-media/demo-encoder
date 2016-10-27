@@ -41,45 +41,46 @@ var bucketName = config.bucketName;
 
 // Kick off and manage s3 upload process
 exports.s3Upload = function(options, callback) {
-	status.updateStatusObject(options.statusURI, 'Uploading videos to storage');
-	if (options.outputType === 'm3u8') {
+	status.updateStatusObject(options.statusURI, 'Uploading videos to storage...');
 
-		// List of tasks for m3u8 s3 upload
-		// Collect all files, upload all files, get URLS for playback assets (m3u8s)
-		async.waterfall([
-			getHlsFiles(options),
-			asyncUpload,
-			getRemotePaths
-		], function(error, options) {
-			if (error) {
-				// S3 upload workflow error
-				callback(error);
-			} else {
-				// Completed S3 uploads
-				debug('Completed uploading all assets for ' + options.statusURI);
-				callback(null, options);
-			}
-		});
-	} else {
-
-	}
+	// List of tasks for m3u8 s3 upload
+	// Collect all files, upload all files, get URLS for playback assets (m3u8s)
+	async.waterfall([
+		getFiles(options),
+		asyncUpload,
+		getRemotePaths
+	], function(error, options) {
+		if (error) {
+			// S3 upload workflow error
+			callback(error);
+		} else {
+			// Completed S3 uploads
+			debug('Completed uploading all assets for ' + options.statusURI);
+			callback(null, options);
+		}
+	});
 }
 
-// Find all HLS files and create remote paths
-function getHlsFiles(options, callback) {
+// Find all files and create remote paths
+function getFiles(options, callback) {
 	return function(callback) {
 		// file names
-		options.files = [options.fileName + options.timestamp + '_manifest.m3u8'];
+		options.files = [];
 		// local paths
-		options.uploadFilePaths = [options.manifestLocation];
+		options.uploadFilePaths = [];
 		// remote paths
-		options.remoteFilePaths = [options.reverseTimestamp + '/' + options.files[0]];
+		options.remoteFilePaths = [];
+
+		if (options.outputType === 'm3u8') {
+			options.files.push(options.fileName + options.timestamp + '_manifest.m3u8');
+			options.uploadFilePaths.push(options.manifestLocation);		
+			options.remoteFilePaths.push(options.reverseTimestamp + '/' + options.files[0]);
+		}
 		async.eachOf(options.outputDirs, function(directory, key, cb) {
 			fs.readdir(directory, function(err, files) {
 				if (err) {
 					cb(error);
 				} else {
-					
 					options.files = options.files.concat(files);
 					// Add remote prefix to files
 					_.forEach(files, function(file, i) {
@@ -223,13 +224,12 @@ function getAssetTypeByFile(fileName) {
 // Helper function for determining playback urls
 function playbackUrl(file) {
 	switch (getAssetTypeByFile(file)) {
-		case 'mp4':
-		case 'm3u8': {
-			return true;
+		case 'ts': {
+			return false;
 			break;
 		}
 		default: {
-			return false;
+			return true;
 			break;
 		}
 	}

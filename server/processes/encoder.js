@@ -31,9 +31,9 @@ var path = require('path');
 var fs = require('fs');
 
 // Encode HLS videos
-exports.encodeHls = function(options, callback) {
+exports.encodeVideo = function(options, callback) {
 	// Iterate through each bitrate
-	status.updateStatusObject(options.statusURI, 'Encoding videos')
+	status.updateStatusObject(options.statusURI, 'Encoding videos...')
 	async.eachOf(options.outputDirs, function(directory, key, cb) {
 
 		// Set up ffmpeg options for HLS encode
@@ -41,7 +41,13 @@ exports.encodeHls = function(options, callback) {
 		var output = {};
 		var bitrate = options.bitrates[key];
 		input.inputOptions = ['-report'];
-		output.outputOptions = ["-hls_time " + options.fragmentSize, "-hls_list_size 0", "-bsf:v h264_mp4toannexb", "-threads 0", '-b:v ' + bitrate + 'k', '-r ' + options.fps];
+		if (options.outputType === 'm3u8') {
+			// HLS FFMPEG OPTIONS
+			output.outputOptions = ["-hls_time " + options.fragmentSize, "-hls_list_size 0", "-bsf:v h264_mp4toannexb", "-threads 0", '-b:v ' + bitrate + 'k', '-r ' + options.fps];
+		} else {
+			// DEFAULT FFMPEG OPTIONS
+			output.outputOptions = ["-threads 0", '-b:v ' + bitrate + 'k', '-r ' + options.fps];
+		}
 		input.inputURI = path.join(__dirname, '../../' + options.inputURI);
 		output.outputURI = directory + '/' + options.fileName + options.timestamp + '_' + bitrate + '.' + options.outputType;
 		options.outputURI = output.outputURI;
@@ -62,16 +68,20 @@ exports.encodeHls = function(options, callback) {
 		} else {
 			// All encodes finished
 			debug("Successfully encoded videos for " + options.statusURI);
-			createManifest(options)
-			.then(function(options) {
+			if (options.outputType === 'm3u8') {
+				createManifest(options)
+				.then(function(options) {
+					callback(null, options);
+				}, function(error) {
+					callback(error);
+				});
+			} else {
 				callback(null, options);
-			}, function(error) {
-				callback(error);
-			})
+			}
 		}
 	});
 }
-
+	
 // Ffmpeg executions
 function executeFfmpeg(input, output) {
 	var deferred = q.defer();

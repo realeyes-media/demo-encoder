@@ -72,7 +72,7 @@ function setWorkflow(options) {
 			// Workflow tasks
 			workflow.workflow = [
 				fileSystem.createDirs(options),
-				encoder.encodeHls,
+				encoder.encodeVideo,
 				uploader.s3Upload
 			]
 			if (config.cleanup) {
@@ -81,12 +81,12 @@ function setWorkflow(options) {
 			return workflow
 			break;
 		}
-		case workflowConstants.ENCODE_HLS: {
-			options.outputType = 'm3u8';
+		case workflowConstants.ENCODE_HLS:
+		case workflowConstants.ENCODE_VIDEO: {
 			// Workflow tasks
 			workflow.workflow = [
 				fileSystem.createDirs(options),
-				encoder.encodeHls,
+				encoder.encodeVideo,
 				uploader.s3Upload
 			]
 			if (config.cleanup) {

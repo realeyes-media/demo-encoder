@@ -50,7 +50,7 @@ router.post('/', upload.single('file'), function(req, res, next) {
 		body.type = 'encodeHls';
 	} else if (body.outputType === 'MP4') {
 		body.outputType = 'mp4';
-		body.type = 'video';
+		body.type = 'encodeVideo';
 	}
 	body.inputURI = file.path;
 	body.fileName = file.originalname.replace(/\.[^/.]+$/, "");

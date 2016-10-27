@@ -28,10 +28,11 @@ var debug = require('debug')('demo-encoder:file-system');
 var path = require('path');
 var config = require('../config/configuration.json');
 var status = require('../control/status');
+var rimraf = require('rimraf');
 
 // Create all directories needed for workflow
 exports.createDirs = function(options, callback) {
-	status.updateStatusObject(options.statusURI, 'Creating Directories');
+	status.updateStatusObject(options.statusURI, 'Creating Directories...');
 	return function(callback) {
 		options.outputDirectory = path.join(__dirname, ('../../' + options.outputDir + options.timestamp));
 
@@ -68,6 +69,31 @@ exports.createDirs = function(options, callback) {
 			callback(error);
 		});
 	}
+}
+
+exports.cleanup = function(options, callback) {
+	status.updateStatusObject(options.statusURI, 'Finishing up...');
+
+	// Array of files to clean
+	var cleanupArray = [path.join(__dirname, '../../' + options.inputURI), options.outputDirectory];
+
+	async.each(cleanupArray, function(directory, cb) {
+		rimraf(directory, function(err) {
+			if (err) {
+				cb(err);
+			} else {
+				debug('cleaned up: ' + directory);
+				cb();
+			}
+		});
+	}, function(error) {
+		if (error) {
+			callback(error);
+		} else {
+			debug('Successfully cleaned up: ' + options.statusURI);
+			callback(null, options);
+		}
+	});
 }
 
 function makeDirectory(directory) {  
