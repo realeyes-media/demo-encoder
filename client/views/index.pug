@@ -4,7 +4,7 @@ block content
   form#upload(method='POST', enctype='multipart/form-data')
     .form-group
       label(for='fps') FPS
-      input#fps.form-control(name='fps', type='text', aria-describedby='emailHelp', placeholder='29.97')
+      input#fps.form-control(name='fps', type='text', value='29.97')
     .form-group
       label(for='exampleSelect2') Select Bitrates
       select#bitrates.form-control(multiple='', name='bitrates')
@@ -22,7 +22,7 @@ block content
         option MP4
     .form-group
       label.control-label Select File
-      input#input-1.file(type='file', name='file')
+      input#input-1.file(type='file', name='file', required)
     div.btn.btn-primary#upload-button(type='submit') Submit
   p
   ol.list-group.text-center#status

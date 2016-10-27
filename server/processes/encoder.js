@@ -30,7 +30,7 @@ var debug = require('debug')('demo-encoder:encoder');
 var path = require('path');
 var fs = require('fs');
 
-// Encode HLS videos
+// Encode videos
 exports.encodeVideo = function(options, callback) {
 	// Iterate through each bitrate
 	status.updateStatusObject(options.statusURI, 'Encoding videos...')
@@ -42,10 +42,10 @@ exports.encodeVideo = function(options, callback) {
 		var bitrate = options.bitrates[key];
 		input.inputOptions = ['-report'];
 		if (options.outputType === 'm3u8') {
-			// HLS FFMPEG OPTIONS
+			// HLS FFMPEG OPTIONS 
 			output.outputOptions = ["-hls_time " + options.fragmentSize, "-hls_list_size 0", "-bsf:v h264_mp4toannexb", "-threads 0", '-b:v ' + bitrate + 'k', '-r ' + options.fps];
 		} else {
-			// DEFAULT FFMPEG OPTIONS
+			// DEFAULT FFMPEG OPTIONS (Add whatever you'd like here, but this will use the default codecs based on output type)
 			output.outputOptions = ["-threads 0", '-b:v ' + bitrate + 'k', '-r ' + options.fps];
 		}
 		input.inputURI = path.join(__dirname, '../../' + options.inputURI);
@@ -119,7 +119,7 @@ function executeFfmpeg(input, output) {
     return deferred.promise;
 }
 
-// Create manifest.m3u8 
+// Create set level manifests 
 function createManifest(options) {
 	var deferred = q.defer();
 	var bitrates = options.bitrates;

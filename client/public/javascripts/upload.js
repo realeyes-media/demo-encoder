@@ -13,10 +13,15 @@ $('#upload').submit(function ( e ) {
       processData: false,
       contentType: false,
       type: 'POST',
-      success: function ( data ) {
+      success: function(data) {
         console.log( data );
         var statusURI = data.statusURI;
         pollStatus(statusURI);
+        $('#status').html('<li class="list-group-item">Uploading video</li>');
+      },
+      error: function(error) {
+        console.log(error);
+        $('#status').html('<li class="list-group-item">Please select a file to upload</li>');
       }
   });
 
@@ -25,7 +30,6 @@ $('#upload').submit(function ( e ) {
 
 $( "#upload-button" ).click(function() {
   $( "#upload" ).submit();
-  $('#status').html('<li class="list-group-item">Uploading video</li>');
   $('#complete').html('');
 });
 

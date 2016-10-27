@@ -18,6 +18,8 @@
  * from RealEyes Media, LLC.
  */
 
+
+/* Accessible status object for client side updates */
 exports.statusObject = {};
 
 exports.updateStatusObject = function(inputURI, status, complete, error) {

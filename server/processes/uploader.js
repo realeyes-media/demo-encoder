@@ -221,7 +221,7 @@ function getAssetTypeByFile(fileName) {
   return rc;
 }
 
-// Helper function for determining playback urls
+// Helper function for determining playback urls (no ts fragments)
 function playbackUrl(file) {
 	switch (getAssetTypeByFile(file)) {
 		case 'ts': {

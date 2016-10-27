@@ -41,6 +41,11 @@ exports.createDirs = function(options, callback) {
 		.then(function() {
 			options.outputDirs = [];
 
+			// If there's a single bitrate, make it an array so it doesn't read length of string
+			if (_.isString(options.bitrates)) {
+				options.bitrates = [options.bitrates];
+			}
+
 			// Loop through bitrates
 			async.each(options.bitrates, function(bitrate, cb) {
 				var directory = options.outputDirectory + '/' + bitrate;
@@ -71,10 +76,11 @@ exports.createDirs = function(options, callback) {
 	}
 }
 
+// Cleanup local media directory
 exports.cleanup = function(options, callback) {
 	status.updateStatusObject(options.statusURI, 'Finishing up...');
 
-	// Array of files to clean
+	// Array of files to clean, there's probably a better way to dynamically cleanup than this
 	var cleanupArray = [path.join(__dirname, '../../' + options.inputURI), options.outputDirectory];
 
 	async.each(cleanupArray, function(directory, cb) {
@@ -96,6 +102,7 @@ exports.cleanup = function(options, callback) {
 	});
 }
 
+// Creates a directory if it doesn't exist
 function makeDirectory(directory) {  
 	var deferred = q.defer();
   	fs.stat(directory, function(err, stats) {
