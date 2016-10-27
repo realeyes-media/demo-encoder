@@ -20,15 +20,15 @@
 
 /* MODULE FOR FS MANAGEMENT */
 
-var fs = require('fs');
-var _ = require('lodash');
-var q = require('q');
-var async = require('async');
-var debug = require('debug')('demo-encoder:file-system');
-var path = require('path');
+const fs = require('fs');
+const _ = require('lodash');
+const q = require('q');
+const async = require('async');
+const debug = require('debug')('demo-encoder:file-system');
+const path = require('path');
+const rimraf = require('rimraf');
 var config = require('../config/configuration.json');
 var status = require('../control/status');
-var rimraf = require('rimraf');
 
 // Create all directories needed for workflow
 exports.createDirs = function(options, callback) {

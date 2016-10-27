@@ -20,11 +20,11 @@
 
 /* MODULE FOR OVERSEEING THE ENCODING WORKFLOW */
 
-var async = require('async');
-var debug = require('debug')('demo-encoder:workflow');
+const async = require('async');
+const debug = require('debug')('demo-encoder:workflow');
 var encoder = require('../processes/encoder');
 var uploader = require('../processes/uploader');
-var _ = require('lodash');
+const _ = require('lodash');
 var fileSystem = require('../processes/file-system');
 var workflowConstants = require('./workflow-constants');
 var config = require('../config/configuration.json');

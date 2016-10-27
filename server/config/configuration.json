@@ -8,5 +8,6 @@
 	},
 	"outputDir": "media/output",
 	"bucketName": "demo-encoder",
-	"cleanup": false
+	"cleanup": false,
+	"signedUrls": false
 }

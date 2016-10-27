@@ -18,7 +18,7 @@
  * from RealEyes Media, LLC.
  */
 
-var express = require('express');
+const express = require('express');
 var router = express.Router();
 var status = require('../control/status');
 

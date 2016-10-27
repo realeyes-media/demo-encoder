@@ -18,10 +18,10 @@
  * from RealEyes Media, LLC.
  */
 
-var express = require('express');
+const express = require('express');
 var router = express.Router();
 var workflow = require('../control/workflow');
-var multer = require('multer');
+const multer = require('multer');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {

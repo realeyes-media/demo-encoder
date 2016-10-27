@@ -20,15 +20,15 @@
 
 /* MODULE FOR ENCODING VIDEOS USING FFMPEG */
 
-var ffmpeg = require('fluent-ffmpeg');
-var _ = require('lodash');
-var async = require('async');
-var q = require('q');
+const ffmpeg = require('fluent-ffmpeg');
+const _ = require('lodash');
+const async = require('async');
+const q = require('q');
 var constants = require('../control/workflow-constants');
 var status = require('../control/status');
-var debug = require('debug')('demo-encoder:encoder');
-var path = require('path');
-var fs = require('fs');
+const debug = require('debug')('demo-encoder:encoder');
+const path = require('path');
+const fs = require('fs');
 
 // Encode videos
 exports.encodeVideo = function(options, callback) {

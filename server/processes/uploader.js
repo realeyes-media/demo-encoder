@@ -20,13 +20,14 @@
 
 /* MODULE FOR UPLOADING FILES TO STORAGE */
 
-var _ = require('lodash');
-var debug = require('debug')('demo-encoder:uploader');
-var path = require('path');
-var fs = require('fs');
-var q = require('q');
-var async = require('async');
-var AWS = require('aws-sdk');
+const _ = require('lodash');
+const debug = require('debug')('demo-encoder:uploader');
+const path = require('path');
+const fs = require('fs');
+const q = require('q');
+const async = require('async');
+const AWS = require('aws-sdk');
+const url = require('url');
 var awsConfig = require('../config/aws-config.json');
 if (awsConfig.accessKeyId.length > 0) {
 	AWS.config.loadFromPath(path.join(__dirname, '../config/aws-config.json' ));
@@ -156,12 +157,16 @@ function getRemotePaths(options, callback) {
 	async.each(options.remotePaths, function(file, cb) {
 		// Expires in 1 year (Max value)
 		var params = {Bucket: bucketName, Key: file, Expires: 31556926};
-		s3.getSignedUrl('getObject', params, function(err, url) {
+		s3.getSignedUrl('getObject', params, function(err, s3url) {
 			if (err) {
 				cb(err);
 			} else {
 				// Successfully signed URL
-				options.signedUrls.push(url);
+				if (config.signedUrls) {
+					options.signedUrls.push(s3url);
+				} else {
+					options.signedUrls.push('http://' + url.parse(s3url).host + url.parse(s3url).pathname);
+				}
 				cb();
 			}
 		});

@@ -34,7 +34,4 @@ exports.updateStatusObject = function(inputURI, status, complete, error) {
 	if (error) {
 		exports.statusObject[inputURI].error = true;
 	}
-
-	console.log(exports.statusObject);
-
 }
