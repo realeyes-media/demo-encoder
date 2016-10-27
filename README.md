@@ -10,8 +10,18 @@
 * $ npm install -g bower
 * $ npm install
 * Update /server/config/aws-config.json with your aws access key and secret key for S3 uploading.
+
+### How do I run the app? ###
+
+## On mac ##
 * Run project with $ npm start
 * Go to http://localhost:3000 in a browser.
+## On windows ##
+* Set your DEBUG environment variable to demo-encoder:*  (set DEBUG=demo-encoder:*)
+* Run the app with node ./bin/www
+
+
+
 
 *You can encode a video with the default setting by only selecting a video and not changing any of the options on the web form*
 
