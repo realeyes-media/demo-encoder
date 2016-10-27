@@ -3,3 +3,5 @@ bower_components/
 media/*
 ffmpeg-*
 npm-debug.log
+server/config/aws-config.json
+

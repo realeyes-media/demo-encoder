@@ -1,0 +1,6 @@
+{ 
+	"accessKeyId": "{YOUR_ACCESS_KEY}",
+	"secretAccessKey": "{YOUR_SECRET_ACCESS_KEY}", 
+	"region": "us-east-1",
+	"maxRetries": 0
+}
