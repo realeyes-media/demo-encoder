@@ -9,6 +9,7 @@
 * Install bower and run npm install
 * $ npm install -g bower
 * $ npm install
+* $ bower install
 * Update /server/config/aws-config.json.template with your aws access key and secret key for S3 uploading. Then rename the file to aws-config.json
 * Update the *bucketName* value in /server/config/configuration.json with your s3 bucket name
 * Turn local cleanup on/off with the cleanup value in /server/config/configuration.json
