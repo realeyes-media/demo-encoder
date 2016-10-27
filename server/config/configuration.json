@@ -7,7 +7,7 @@
 		"fragmentSize": 8
 	},
 	"outputDir": "media/output",
-	"bucketName": "demo-encoder",
+	"bucketName": "",
 	"cleanup": false,
 	"signedUrls": false
 }
