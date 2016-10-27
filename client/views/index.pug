@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  form#upload(method='POST', enctype='multipart/form-data')
+    .form-group
+      label(for='fps') FPS
+      input#fps.form-control(name='fps', type='text', value='29.97')
+    .form-group
+      label(for='exampleSelect2') Select Bitrates
+      select#bitrates.form-control(multiple='', name='bitrates')
+        option 1000
+        option 386
+        option 200
+    .form-group
+      label(for='exampleSelect1') Fragment Size
+      select#1-100.form-control(name='fragmentSize')
+    .form-group
+      label(for='outputType') Output Type
+      select#outputType.form-control(name='outputType')
+        option Default
+        option HLS
+        option MP4
+    .form-group
+      label.control-label Select File
+      input#input-1.file(type='file', name='file', required)
+    div.btn.btn-primary#upload-button(type='submit') Submit
+  p
+  ol.list-group.text-center#status
+  h2.text-center#complete
+
+  script(src='/javascripts/upload.js')
