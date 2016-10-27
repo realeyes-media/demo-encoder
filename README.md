@@ -34,6 +34,7 @@
 * Encoding processes, file system processes, and storage upload processes are designated to their own respective files in the **server/processes** directory
 * All client code is in the **client** directory, and is a very rough bootstrap design with a single ajax form.
 * Workflow status is polled, and accesses the javascript object in **server/control/status.js**
+* All workflow specific values are stored in the **options,** which are passed through the application until completion.
 
 ## Contact ##
 
