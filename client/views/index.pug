@@ -3,14 +3,18 @@ extends layout
 block content
   form#upload(method='POST', enctype='multipart/form-data')
     .form-group
-      label(for='fps') FPS
-      input#fps.form-control(name='fps', type='text', value='29.97')
-    .form-group
       label(for='exampleSelect2') Select Bitrates
       select#bitrates.form-control(multiple='', name='bitrates')
-        option 1000
-        option 386
-        option 200
+        option copy
+        option 1100
+        option 780
+        option 365
+    .form-group
+      label(for='exampleSelect1') Select Codec
+      select#codec.form-control(name='codec')
+        option copy
+        option x264
+        option x265
     .form-group
       label(for='exampleSelect1') Fragment Size
       select#1-100.form-control(name='fragmentSize')
@@ -18,8 +22,8 @@ block content
       label(for='outputType') Output Type
       select#outputType.form-control(name='outputType')
         option Default
-        option HLS
-        option MP4
+        option m3u8
+        option mp4
     .form-group
       label.control-label Select File
       input#input-1.file(type='file', name='file', required)
