@@ -1,5 +1,6 @@
 export const ENCODER_MAP = {
     CODEC: {
+        copy: 'copy'
         x264: 'libx264',
         x265: 'libx265'
     },
