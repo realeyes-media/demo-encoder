@@ -99,8 +99,7 @@ export async function segmentVideo(options: WorkflowOptions): Promise<WorkflowOp
         hlsVersion: config.ENCODER_OPTIONS.HLS_VERSION
     }
     const params = await setBentoParams(data)
-    // const input = (data.localPaths.length > 1) ? data.localPaths.join(' ') : data.localPaths[0]
-    const input = data.localPaths[0]
+    const input = data.localPaths
     await bento4.mp4hls.exec(input, params)
     return options
 }
