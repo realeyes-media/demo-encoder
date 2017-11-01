@@ -75,7 +75,7 @@ export async function encodeVideo(options: WorkflowOptions): Promise<WorkflowOpt
         // DEFAULT FFMPEG OPTIONS (Add whatever you'd like here, but this will use the default codecs based on output type)
         output.outputOptions = ['-threads 0', `-c:v ${ENCODER_MAP.CODEC[options.codec]}`, '-b:v ' + bitrate + 'k']
         input.inputURI = options.inputURI
-        const outputURI = `${directory}/${options.fileName + options.timestamp}_${bitrate + ENCODER_MAP.OUTPUT_TYPE[options.outputType]}`
+        const outputURI = `${directory}/${options.fileName + options.timestamp}_${bitrate}.mp4`
         output.outputURI = outputURI
         options.outputURI = output.outputURI
 
@@ -93,7 +93,7 @@ export async function segmentVideo(options: WorkflowOptions): Promise<WorkflowOp
     const data: SegmenterData = {
         localPaths: options.encoderOutput,
         assetPath: options.outputDirectory + config.HLS_DIR,
-        assetName: options.fileName,
+        assetName: `${options.fileName}.m3u8`,
         segmentDuration: options.segmentSize,
         outputSingleFile: config.ENCODER_OPTIONS.OUTPUT_SINGLE_FILE,
         hlsVersion: config.ENCODER_OPTIONS.HLS_VERSION
@@ -101,8 +101,6 @@ export async function segmentVideo(options: WorkflowOptions): Promise<WorkflowOp
     const params = await setBentoParams(data)
     // const input = (data.localPaths.length > 1) ? data.localPaths.join(' ') : data.localPaths[0]
     const input = data.localPaths[0]
-    console.log(input)
-    console.log(params)
     await bento4.mp4hls.exec(input, params)
     return options
 }
@@ -147,7 +145,7 @@ async function setBentoParams(params: SegmenterData): Promise<string[]> {
     const inputParams = []
     for (const [paramKey, paramValue] of Object.entries(params)) {
         if (paramValue && paramMap[paramKey]) {
-            inputParams.push(`${paramMap[paramKey]}${paramValue} `)
+            inputParams.push(`${paramMap[paramKey]}${paramValue}`)
         }
     }
 

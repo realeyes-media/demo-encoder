@@ -68,12 +68,10 @@ async function getFiles(options: WorkflowOptions): Promise<WorkflowOptions> {
     options.remoteFilePaths = []
     options.filePaths = []
     if (options.outputType === 'm3u8') {
-        console.log('here?')
         const hlsPaths = await getHlsPaths(options.outputDirectory + config.HLS_DIR,
-            options.outputDirectory + config.HLS_DIR, options.reverseTimestamp)
+            options.outputDirectory + config.HLS_DIR, `${options.reverseTimestamp}`)
         options.filePaths = options.filePaths.concat(hlsPaths)
     }
-    console.log('how about here?')
     options.outputDirs.forEach(async (directory, key) => {
         const files = await fs.readdir(directory)
         options.files = options.files.concat(files)
@@ -87,7 +85,6 @@ async function getFiles(options: WorkflowOptions): Promise<WorkflowOptions> {
 
         options.filePaths = options.filePaths.concat(mp4Files)
     })
-    console.log(options.filePaths)
     return options
 }
 
@@ -99,19 +96,21 @@ async function getHlsPaths(fullAssetPath: string, assetPath: string, uploadPath:
 
     // Complex so I'll explain... Concat all files with the directory prefix
     const fileCollection = await Promise.all((await fs.readdir(assetPath)).map(async fileName => {
+     
         const filePath = path.join(assetPath, fileName)
         const stat = await fs.stat(filePath)
+            
         if (stat.isDirectory()) {
-            return await this.getPathsForUpload({
-                fullAssetPath: fullAssetPath,
-                assetPath: filePath,
-                uploadPath: uploadPath
-            })
+            return await getHlsPaths(
+                fullAssetPath,
+                filePath,
+                uploadPath
+            )
         }
         const remoteFileName = filePath.substring(filePath.indexOf(fullAssetPath) + fullAssetPath.length, filePath.length)
-        return { localPath: filePath, remotePath: path.join(uploadPath, remoteFileName) }
+        const returnPath = path.join(uploadPath, remoteFileName)
+        return { localPath: filePath, remotePath: returnPath }
     }).reduce((a, b) => a.concat(b), []))
-
     return [].concat(...fileCollection) as PathMap[]
 }
 
@@ -135,7 +134,6 @@ async function asyncUpload(options: WorkflowOptions): Promise<WorkflowOptions> {
 // Function for async uploading of a single file
 async function upload(file: string, remotePath: string) {
     return new Promise((resolve, reject) => {
-        console.log(file)
         const body = fs.createReadStream(file)
         const params = { Bucket: bucketName, Key: remotePath, Body: body, ContentType: mime.getType(file) }
         s3.upload(params, function (err, data) {

@@ -4,6 +4,7 @@ import * as fileSystem from '../processes/file-system'
 import * as encoder from '../processes/encoder'
 import * as uploader from '../processes/uploader'
 import { log, LogLevels } from '../processes/logger'
+import * as status from './status'
 
 export interface WorkflowOptions {
     timestamp: number
@@ -37,7 +38,6 @@ interface Workflow {
 
 export async function initWorkflow(options: WorkflowOptions): Promise<string> {
     const workflow = await setWorkflow(options)
-    console.log(workflow)
     manageWorkflow(workflow)
     return workflow.options.statusURI
 }
@@ -49,6 +49,7 @@ async function manageWorkflow(workflow: Workflow) {
             options = await task(options)
         }
         log(LogLevels.info, 'Encode workflow finished')
+        status.updateStatusObject(options.statusURI, options.signedUrls, true)
     } catch (error) {
         log(LogLevels.error, error.message)
     }
@@ -63,6 +64,17 @@ async function setWorkflow(options: WorkflowOptions): Promise<Workflow> {
 
     switch (options.type) {
         case workflowConstants.ENCODE_HLS:
+            workflow.tasks = [
+                fileSystem.createDirs,
+                encoder.encodeVideo,
+                encoder.segmentVideo,
+                uploader.s3Upload
+            ]
+            if (config.CLEANUP) {
+                workflow.tasks.push(fileSystem.cleanup)
+            }
+            workflow.options = options
+            return workflow
         case workflowConstants.DEFAULT: {
             for (const key in config.DEFAULT_ENCODE) {
                 options[key] = config.DEFAULT_ENCODE[key]

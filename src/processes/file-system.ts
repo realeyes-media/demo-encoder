@@ -39,7 +39,7 @@ export async function createDirs(options: WorkflowOptions) {
     await makeDirectory(options.outputDirectory)
 
     options.outputDirs = []
-
+    if (typeof options.bitrates === 'string') options.bitrates = [options.bitrates]
     options.bitrates.forEach(async bitrate => {
         const directory = `${options.outputDirectory}/${bitrate}`
         options.outputDirs.push(directory)
