@@ -75,3 +75,11 @@ temp/*
 media/*
 output/
 *.dev.yml
+=======
+node_modules/
+bower_components/
+media/*
+ffmpeg-*
+npm-debug.log
+server/config/aws-config.json
+.DS_Store
