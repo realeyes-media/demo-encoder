@@ -15,14 +15,14 @@ export const ENCODER_OPTIONS = {
 
 export const HLS_DIR = '/hls'
 
-export const LOCAL_PATH = '/Users/philmoss/Repos/demo-encoder'
-export const BENTO_PATH = '/Users/philmoss/Downloads/Bento4-SDK-1-5-1-620.universal-apple-macosx/bin'
+export const LOCAL_PATH = ''
+export const BENTO_PATH = ''
 
 export const BUCKET_NAME = 'demo-encoder'
 export const SIGNED_URLS = false
 export const CLEANUP = false
 
-export const AWS_ACCESS_KEY = 'AKIAJN746OXAQJQFP6OQ'
-export const AWS_SECRET_KEY = '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'
-export const AWS_REGION = 'us-east-1'
+export const AWS_ACCESS_KEY = ''
+export const AWS_SECRET_KEY = ''
+export const AWS_REGION = ''
 export const AWS_RETRIES = 0
