@@ -28,8 +28,9 @@ import { WorkflowOptions } from '../control/workflow'
 import * as path from 'path'
 import { ENCODER_MAP } from '../config/encoder-map'
 import promisify = require('promisify-node')
-const bento4 = require('fluent-bento4')({ bin: '/Users/philmoss/Downloads/Bento4-SDK-1-5-1-620.universal-apple-macosx/bin' })
 import * as config from '../config/config'
+import * as spawn from 'cross-spawn'
+const bento4 = require('fluent-bento4')({ bin: config.BENTO_PATH })
 const fs = promisify('fs')
 
 interface FffmpegInput {
@@ -72,8 +73,13 @@ export async function encodeVideo(options: WorkflowOptions): Promise<WorkflowOpt
         const bitrate = options.bitrates[index]
         input.inputOptions = ['-report']
 
-        // DEFAULT FFMPEG OPTIONS (Add whatever you'd like here, but this will use the default codecs based on output type)
-        output.outputOptions = ['-threads 0', `-c:v ${ENCODER_MAP.CODEC[options.codec]}`, '-b:v ' + bitrate + 'k']
+        if (ENCODER_MAP.CODEC[options.codec] === 'libx265') {
+            output.outputOptions = ['-threads 0', `-c:v libx265`, `-preset slow`, `-x265-params profile=main:` + 
+            `bitrate=${bitrate}:vbv-maxrate=${bitrate}:vbv-bufsize=${bitrate}`]
+        } else {
+            output.outputOptions = ['-threads 0', `-c:v ${ENCODER_MAP.CODEC[options.codec]}`, '-b:v ' + bitrate + 'k']
+        }
+    
         input.inputURI = options.inputURI
         const outputURI = `${directory}/${options.fileName + options.timestamp}_${bitrate}.mp4`
         output.outputURI = outputURI
@@ -90,18 +96,66 @@ export async function encodeVideo(options: WorkflowOptions): Promise<WorkflowOpt
 }
 
 export async function segmentVideo(options: WorkflowOptions): Promise<WorkflowOptions> {
-    const data: SegmenterData = {
-        localPaths: options.encoderOutput,
-        assetPath: options.outputDirectory + config.HLS_DIR,
-        assetName: `${options.fileName}.m3u8`,
-        segmentDuration: options.segmentSize,
-        outputSingleFile: config.ENCODER_OPTIONS.OUTPUT_SINGLE_FILE,
-        hlsVersion: config.ENCODER_OPTIONS.HLS_VERSION
+    if (ENCODER_MAP.CODEC[options.codec] === 'libx265') {
+        const localPaths = await fragmentMP4(options.encoderOutput)
+
+        await fs.mkdir(options.outputDirectory + config.HLS_DIR)
+        const params = [`--output-dir=${options.outputDirectory + config.HLS_DIR}`,
+         `--no-split`, `--hls`, `--force`, `--use-segment-timeline`]
+            .concat(localPaths)
+        await exec(`${config.BENTO_PATH}/mp4dash`, params)
+    } else {
+        const data: SegmenterData = {
+            localPaths: options.encoderOutput,
+            assetPath: options.outputDirectory + config.HLS_DIR,
+            assetName: `${options.fileName}.m3u8`,
+            segmentDuration: options.segmentSize,
+            outputSingleFile: config.ENCODER_OPTIONS.OUTPUT_SINGLE_FILE,
+            hlsVersion: config.ENCODER_OPTIONS.HLS_VERSION
+        }
+        const params = await setBentoParams(data)
+        const input = data.localPaths
+        await bento4.mp4hls.exec(input, params)
     }
-    const params = await setBentoParams(data)
-    const input = data.localPaths
-    await bento4.mp4hls.exec(input, params)
     return options
+}
+
+async function fragmentMP4(inputMP4s): Promise<string[]> {
+    const outputMP4s = inputMP4s.map(input => {
+        const inputParts = input.split('.')
+        return `${inputParts[0]}-frag.mp4`
+    })
+
+    const fragmentCommands = outputMP4s.map((output, index) => {
+        return exec(`${config.BENTO_PATH}/mp4fragment`, [inputMP4s[index], output])
+    })
+
+    await Promise.all(fragmentCommands)
+
+    return outputMP4s
+}  
+
+function exec(command: string, args: string []) {
+    return new Promise((resolve, reject) => {
+        const cp = spawn(command, args)
+
+        cp.on('error', err => {
+            reject(err)
+        })
+
+        cp.on('close', code => {
+            log(LogLevels.info, data)
+            resolve(data)
+        })
+
+        var data = ''
+        cp.stdout.on('data', chunk => (data += chunk))
+        // cp.stdout.on('end', () => {console.log('>>>end stdout')})
+
+        var error = ''
+        cp.stderr.on('data', chunk => (error += chunk))
+        // cp.stderr.on('end', () => {console.log('>>>end stderr', error)})
+    })
 }
 
 // Ffmpeg executions

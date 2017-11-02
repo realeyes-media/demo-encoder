@@ -16,6 +16,7 @@ export const ENCODER_OPTIONS = {
 export const HLS_DIR = '/hls'
 
 export const LOCAL_PATH = '/Users/philmoss/Repos/demo-encoder'
+export const BENTO_PATH = '/Users/philmoss/Downloads/Bento4-SDK-1-5-1-620.universal-apple-macosx/bin'
 
 export const BUCKET_NAME = 'demo-encoder'
 export const SIGNED_URLS = false
