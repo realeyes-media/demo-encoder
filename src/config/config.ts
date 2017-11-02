@@ -18,7 +18,7 @@ export const HLS_DIR = '/hls'
 export const LOCAL_PATH = ''
 export const BENTO_PATH = ''
 
-export const BUCKET_NAME = 'demo-encoder'
+export const BUCKET_NAME = ''
 export const SIGNED_URLS = false
 export const CLEANUP = false
 
