@@ -54,7 +54,7 @@ export async function s3Upload(options: WorkflowOptions) {
     options = await getFiles(options)
     options = await asyncUpload(options)
     options = await getRemotePaths(options)
-
+    status.updateStatusObject(options.statusURI, 'Done uploading')
     return options
 }
 
@@ -72,19 +72,27 @@ async function getFiles(options: WorkflowOptions): Promise<WorkflowOptions> {
             options.outputDirectory + config.HLS_DIR, `${options.reverseTimestamp}`)
         options.filePaths = options.filePaths.concat(hlsPaths)
     }
-    options.outputDirs.forEach(async (directory, key) => {
+
+    await Promise.all(options.outputDirs.map(async (directory, key) => {
         const files = await fs.readdir(directory)
         options.files = options.files.concat(files)
-        const mp4Files: PathMap[] = files.map(async file => {
-            file = `${directory}/${file}`
-            const stat: Stats = await fs.stat(file)
-            if (stat.isFile()) {
-                return { localPath: `${directory}/${file}`, remotePath: `${options.reverseTimestamp}/${options.bitrates[key]}/${file}` }
-            }
-        })
-
+        const mp4Files = await Promise.all(files.map(file => {
+            return new Promise(async (resolve, reject) => {
+                const filename = path.basename(file)
+                file = `${directory}/${path.basename(filename)}`
+                const stat: Stats = await fs.stat(file)
+                if (stat.isFile()) {
+                    resolve(
+                        {
+                            localPath: `${directory}/${filename}`,
+                            remotePath: `${options.reverseTimestamp}/${options.bitrates[key]}/${filename}`
+                        }
+                    )
+                }
+            })
+        })) as any
         options.filePaths = options.filePaths.concat(mp4Files)
-    })
+    }))
     return options
 }
 
@@ -96,10 +104,10 @@ async function getHlsPaths(fullAssetPath: string, assetPath: string, uploadPath:
 
     // Complex so I'll explain... Concat all files with the directory prefix
     const fileCollection = await Promise.all((await fs.readdir(assetPath)).map(async fileName => {
-     
+
         const filePath = path.join(assetPath, fileName)
         const stat = await fs.stat(filePath)
-            
+
         if (stat.isDirectory()) {
             return await getHlsPaths(
                 fullAssetPath,
@@ -117,7 +125,6 @@ async function getHlsPaths(fullAssetPath: string, assetPath: string, uploadPath:
 // Loop through all files and call upload function
 async function asyncUpload(options: WorkflowOptions): Promise<WorkflowOptions> {
     options.remotePaths = []
-
     // Loop through all files
     options.filePaths.forEach(async (pathMap) => {
         const remotePath = pathMap.remotePath

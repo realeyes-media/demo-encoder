@@ -4,6 +4,7 @@ import * as fileSystem from '../processes/file-system'
 import * as encoder from '../processes/encoder'
 import * as uploader from '../processes/uploader'
 import { log, LogLevels } from '../processes/logger'
+import * as indexer from '../processes/indexer'
 import * as status from './status'
 
 export interface WorkflowOptions {
@@ -29,6 +30,8 @@ export interface WorkflowOptions {
     encoderOutput: string[]
     segmentSize: number
     filePaths: uploader.PathMap[]
+    indexerResults?: any
+    widgets?: any
 }
 
 interface Workflow {
@@ -49,7 +52,7 @@ async function manageWorkflow(workflow: Workflow) {
             options = await task(options)
         }
         log(LogLevels.info, 'Encode workflow finished')
-        status.updateStatusObject(options.statusURI, options.signedUrls, true)
+        status.updateStatusObject(options.statusURI, options.signedUrls.concat(options.widgets), true)
     } catch (error) {
         log(LogLevels.error, error.message)
     }
@@ -69,6 +72,7 @@ async function setWorkflow(options: WorkflowOptions): Promise<Workflow> {
                 encoder.encodeVideo,
                 encoder.segmentVideo,
                 uploader.s3Upload
+
             ]
             if (config.CLEANUP) {
                 workflow.tasks.push(fileSystem.cleanup)
@@ -84,7 +88,8 @@ async function setWorkflow(options: WorkflowOptions): Promise<Workflow> {
                 fileSystem.createDirs,
                 encoder.encodeVideo,
                 encoder.segmentVideo,
-                uploader.s3Upload
+                uploader.s3Upload,
+                indexer.index
             ]
             if (config.CLEANUP) {
                 workflow.tasks.push(fileSystem.cleanup)
