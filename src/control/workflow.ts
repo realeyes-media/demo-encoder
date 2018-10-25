@@ -31,6 +31,7 @@ export interface WorkflowOptions {
     segmentSize: number
     filePaths: uploader.PathMap[]
     indexerResults?: any
+    widgets?: any
 }
 
 interface Workflow {
