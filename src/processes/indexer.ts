@@ -44,13 +44,10 @@ export async function index(options: WorkflowOptions) {
     jobId = JSON.parse(response).id
     status.updateStatusObject(options.statusURI, 'Polling Video Indexer until completion of job...')
     options.indexerResults = await pollIndexer(options)
-    console.log(options.indexerResults)
-    // const widgets = await generateWidgets(options)
-    const widgets = {
-        playerWidget: `https://www.videoindexer.ai/embed/player/${config.INDEXER_ACCOUNT_ID}/${jobId}/?version=2`,
-        insightsWidget: `https://www.videoindexer.ai/embed/insights/${config.INDEXER_ACCOUNT_ID}/${jobId}/?version=2`
-    }
-    console.log(widgets)
+    const widgets = [
+        `https://www.videoindexer.ai/embed/player/${config.INDEXER_ACCOUNT_ID}/${jobId}/?version=2`,
+        `https://www.videoindexer.ai/embed/insights/${config.INDEXER_ACCOUNT_ID}/${jobId}/?version=2`
+    ]
     options.widgets = widgets
     return options
 }
@@ -113,38 +110,6 @@ async function pollIndexer(options: WorkflowOptions) {
             }
         }, 5000)
     })
-}
-
-async function generateWidgets(options: WorkflowOptions) {
-
-    const playerRequestOptions: request.RequestPromiseOptions = {
-        headers: {
-            'Accept': 'application/json',
-        },
-        qs: {
-            accessToken: token
-        }
-    }
-    const playerWidget = await request.get(
-        `${apiEndpoint}${config.INDEXER_LOCATION}/Accounts/${config.INDEXER_ACCOUNT_ID}/Videos/${jobId}/PlayerWidget`
-        , playerRequestOptions
-    )
-
-    const insightRequestOptions: request.RequestPromiseOptions = {
-        headers: {
-            'Accept': 'application/json',
-        },
-        qs: {
-            accessToken: token
-        }
-    }
-
-    log(LogLevels.info, 'getting insights widget')
-    const insightsWidget = await request.get(
-        `${apiEndpoint}${config.INDEXER_LOCATION}/Accounts/${config.INDEXER_ACCOUNT_ID}/Videos/${jobId}/InsightsWidget`
-        , insightRequestOptions
-    )
-    return { playerWidget, insightsWidget }
 }
 
 async function sleep(ms) {

@@ -52,7 +52,7 @@ async function manageWorkflow(workflow: Workflow) {
             options = await task(options)
         }
         log(LogLevels.info, 'Encode workflow finished')
-        status.updateStatusObject(options.statusURI, options.signedUrls, true)
+        status.updateStatusObject(options.statusURI, options.signedUrls.concat(options.widgets), true)
     } catch (error) {
         log(LogLevels.error, error.message)
     }
