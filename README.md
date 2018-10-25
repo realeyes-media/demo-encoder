@@ -9,12 +9,18 @@ Requirements:
 * Docker-compose installed (docker-compose --version)
 * x86_64 Processor architecture
 
-Modify "hotconfig.js" with your settings:
+### Modify "hotconfig.js" with your settings:
+#### AWS Configs:
 * BUCKET_NAME is your AWS Bucket name (i.e. demo-encoder)
 * AWS_ACCESS_KEY and AWS_SECRET_KEY are AWS keys that have write access to the bucket above
-* AWS_REGION is your region, like 'us-east-1';
+* AWS_REGION is your region, like 'us-east-1'
 
-Build and Run:
+#### Indexer Configs:
+* INDEXER_SUBSCRIPTION_KEY
+* INDEXER_ACCOUNT_ID
+* INDEXER_LOCATION
+
+### Build and Run:
 * docker-compose build
 * docker-compose run
 

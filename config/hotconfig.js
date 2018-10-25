@@ -6,6 +6,10 @@ exports.AWS_SECRET_KEY = '';
 exports.AWS_REGION = '';
 exports.AWS_RETRIES = 0;
 
+exports.INDEXER_SUBSCRIPTION_KEY = ''
+exports.INDEXER_ACCOUNT_ID = ''
+exports.INDEXER_LOCATION = ''
+
 exports.OUTPUT_DIR = 'media/output';
 exports.DEFAULT_ENCODE = {
     type: 'default',
