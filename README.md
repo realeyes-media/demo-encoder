@@ -3,6 +3,21 @@
 * demo-encoder can take an input video from the client's file system, transcode it in the cloud, and upload to cloud storage.
 * Version 1.0
 
+## TL;DR Docker Quick Build and Start
+Requirements:
+* Docker installed (docker --version)
+* Docker-compose installed (docker-compose --version)
+* x86_64 Processor architecture
+
+Modify "hotconfig.js" with your settings:
+* BUCKET_NAME is your AWS Bucket name (i.e. demo-encoder)
+* AWS_ACCESS_KEY and AWS_SECRET_KEY are AWS keys that have write access to the bucket above
+* AWS_REGION is your region, like 'us-east-1';
+
+Build and Run:
+* docker-compose build
+* docker-compose run
+
 ## How do I get set up? ##
 
 * Install node.js, and npm.js: [Node](https://nodejs.org/en/) or from homebrew on mac: [Homebrew](http://brew.sh/)
@@ -37,8 +52,6 @@ instead of
 * Run the app with node .dist/bin/www.js
 
 ### Go to http://localhost:3000 in a browser. ###
-
-
 
 *You can encode a video with the default setting by only selecting a video and not changing any of the options on the web form*
 
