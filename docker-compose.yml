@@ -1,0 +1,11 @@
+version: '3'
+services:
+  encoder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+      - 3001:3001
+    environment: 
+      NODE_ENV: production
