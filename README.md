@@ -18,6 +18,14 @@
 * $ npm run compile
 * You can watch for changes in your code with $ npm run watch
 
+## Troubleshooting ##
+
+Open node_modules/fluent-bento4/src/commands/command.js
+Edit line 44 to be:
+`      input.forEach(i => args.push(i))`
+instead of 
+`      input.foreEach(i => args.push(i))`
+
 ## How do I run the app? ##
 
 ### On mac ###
@@ -46,3 +54,4 @@
 
 * realeyes.com
 * https://github.com/realeyes-media/demo-encoder
+
