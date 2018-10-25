@@ -26,3 +26,7 @@ export const AWS_ACCESS_KEY = ''
 export const AWS_SECRET_KEY = ''
 export const AWS_REGION = ''
 export const AWS_RETRIES = 0
+
+export const INDEXER_SUBSCRIPTION_KEY = ''
+export const INDEXER_ACCOUNT_ID = ''
+export const INDEXER_LOCATION = ''
