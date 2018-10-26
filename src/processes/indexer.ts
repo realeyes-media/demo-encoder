@@ -49,6 +49,7 @@ export async function index(options: WorkflowOptions) {
         `https://www.videoindexer.ai/embed/insights/${config.INDEXER_ACCOUNT_ID}/${jobId}/?version=2`
     ]
     options.widgets = widgets
+    status.updateStatusObjectWithInsights(options.statusURI, widgets)
     return options
 }
 

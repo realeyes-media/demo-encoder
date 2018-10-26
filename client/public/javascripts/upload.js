@@ -61,6 +61,12 @@ function pollStatus(statusURI) {
         $('#status').html(html);
         $('#complete').html('Encode workflow finished');
       }
+      console.log('loading iframes',data.insights)
+     
+      $('.iframe-child1').attr('src', data.insights[0])
+      $('.iframe-child2').attr('src', data.insights[1])
+      $('.disabled').removeClass('disabled')
+      $('.insights').attr('href','#insights')
     } else if (data.status != status) {
       status = data.status;
       $('#status').html('<li class="list-group-item">' + data.status + '</li>');
@@ -74,3 +80,15 @@ function pollStatus(statusURI) {
     }
   });
 }
+$(document).ready(function() {
+  jQuery('.tabs .tab-links a').on('click', function(e) {
+    if(e.currentTarget.parentNode.className.indexOf('disabled') === -1){
+      var currentAttrValue = jQuery(this).attr('href')
+      console.log('currentAttrValue', currentAttrValue)
+      jQuery('.tabs ' + currentAttrValue).show().siblings().hide();
+      
+      jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
+    }
+    e.preventDefault();
+  });
+});

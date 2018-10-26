@@ -23,9 +23,10 @@ interface StatusObject {
 }
 
 interface Status {
-    status: string | string []
+    status: string | string[]
     complete?: boolean
     error?: boolean
+    insights?: string[]
 }
 
 export const statusObject = {} as StatusObject
@@ -42,4 +43,12 @@ export async function updateStatusObject(inputURI: string, status: string | stri
     if (error) {
         statusObject[inputURI].error = true
     }
+}
+
+export async function updateStatusObjectWithInsights(inputURI: string, insights: string[]) {
+    if (!exports.statusObject[inputURI]) {
+        statusObject[inputURI] = {} as Status
+    }
+    statusObject[inputURI].insights = insights
+    console.log('status is ', statusObject)
 }

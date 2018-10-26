@@ -11,6 +11,7 @@ class WorkflowStatusRouter {
     private initRoutes() {
         this.router.get('/', this.renderStatus.bind(this))
         this.router.get('/poll/:statusURI', this.pollStatus.bind(this))
+        this.router.get('/pollInsights/insightsURI', this.pollInsights.bind(this)))
     }
 
     private renderStatus(req: Request, res: Response, next: NextFunction) {
@@ -22,6 +23,12 @@ class WorkflowStatusRouter {
             res.send(statusObject[req.params.statusURI])
         } else {
             res.send({ status: 'Uploading video' })
+        }
+    }
+
+    private async pollInsights(req: Request, res: Response, next: NextFunction) {
+        if (statusObject[req.params.insightsURI]) {
+            res.send(statusObject[req.params.insightsURI])
         }
     }
 }

@@ -1,35 +1,48 @@
 extends layout
 
 block content
-  form#upload(method='POST', enctype='multipart/form-data')
-    .form-group
-      label(for='exampleSelect2') Select Bitrates
-      select#bitrates.form-control(multiple='', name='bitrates')
-        option copy
-        option 1100
-        option 780
-        option 365
-    .form-group
-      label(for='exampleSelect1') Select Codec
-      select#codec.form-control(name='codec')
-        option copy
-        option x264
-        option x265
-    .form-group
-      label(for='exampleSelect1') Fragment Size
-      select#1-100.form-control(name='fragmentSize')
-    .form-group
-      label(for='outputType') Output Type
-      select#outputType.form-control(name='outputType')
-        option Default
-        option m3u8
-        option mp4
-    .form-group
-      label.control-label Select File
-      input#input-1.file(type='file', name='file', required)
-    div.btn.btn-primary#upload-button(type='submit') Submit
-  p
-  ol.list-group.text-center#status
-  h2.text-center#complete
+  #tabList.tabs
+    ul.tab-links
+      li.active
+        a(href='#encode') Encode
+      li.disabled
+        a.insights Insights
+    #content.tab-content
+      #encode.tab.active
+        form#upload(method='POST', enctype='multipart/form-data')
+          .form-group
+            label(for='exampleSelect2') Select Bitrates
+            select#bitrates.form-control(multiple='', name='bitrates')
+              option copy
+              option 1100
+              option 780
+              option 365
+          .form-group
+            label(for='exampleSelect1') Select Codec
+            select#codec.form-control(name='codec')
+              option copy
+              option x264
+              option x265
+          .form-group
+            label(for='exampleSelect1') Fragment Size
+            select#1-100.form-control(name='fragmentSize')
+          .form-group
+            label(for='outputType') Output Type
+            select#outputType.form-control(name='outputType')
+              option Default
+              option m3u8
+              option mp4
+          .form-group
+            label.control-label Select File
+            input#input-1.file(type='file', name='file', required)
+          div.btn.btn-primary#upload-button(type='submit') Submit
+        p
+        ol.list-group.text-center#status
+        h2.text-center#complete
 
-  script(src='/javascripts/upload.js')
+        script(src='/javascripts/upload.js')
+      #insights.tab
+        iframe.iframe-child1(scrolling="no")
+        iframe.iframe-child2(scrolling="no")
+        script(src="https://breakdown.blob.core.windows.net/public/vb.widgets.mediator.js")
+

@@ -6,3 +6,76 @@ body {
 a {
   color: #00B7FF;
 }
+.tabs{
+  width:100%;
+  display:block;
+  
+}
+.tab-links{
+  margin-bottom: 0;
+  margin-left: 0;
+}
+.tab-links:after {
+  display:block;
+  clear:both;
+  content:'';
+}
+.tab-links li {
+  margin:0px 5px;
+  float:left;
+  list-style:none;
+}
+.tab-links a {
+  padding:9px 15px;
+  display:inline-block;
+  border-radius:3px 3px 0px 0px;
+  background:#337ab7;
+  font-size:16px;
+  font-weight:600;
+  color:#fff;
+  transition:all linear 0.15s;
+}
+     
+.tab-links a:hover {
+  background:rgb(103, 212, 255);
+  text-decoration:none;
+}
+     
+li.active a, li.active a:hover {
+  background:#fff;
+  color:#4c4c4c;
+}
+li.disabled a, li.disabled a:hover {
+  color:#fff;
+  background:#849baf;
+}
+  
+.tab-content {
+  padding:15px;
+  border-radius:3px;
+  background:#fff;
+  
+
+
+}
+.tab {
+  display:none;
+}
+  
+.tab.active {
+  display:block;
+}
+
+
+.iframe-child1{
+  display:inline-block;
+  overflow:hidden;
+  width:50%;
+  height:1000px;
+}
+.iframe-child2{
+  display:inline-block;
+  overflow:hidden;
+  width:50%;
+  height:1000px;
+}
