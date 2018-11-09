@@ -11,7 +11,7 @@ class WorkflowStatusRouter {
     private initRoutes() {
         this.router.get('/', this.renderStatus.bind(this))
         this.router.get('/poll/:statusURI', this.pollStatus.bind(this))
-        this.router.get('/pollInsights/insightsURI', this.pollInsights.bind(this)))
+        this.router.get('/pollInsights/insightsURI', this.pollInsights.bind(this))
     }
 
     private renderStatus(req: Request, res: Response, next: NextFunction) {
