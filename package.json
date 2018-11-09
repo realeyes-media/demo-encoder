@@ -41,6 +41,7 @@
     "pino": "^4.6.0",
     "promisify-node": "^0.4.0",
     "pug": "^2.0.0-rc.4",
+    "request": "^2.88.0",
     "request-promise-native": "^1.0.4",
     "rimraf": "^2.5.4",
     "serve-favicon": "^2.4.5",
