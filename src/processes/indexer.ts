@@ -83,7 +83,7 @@ async function uploadVideo(options: WorkflowOptions) {
         }
     }
     // The asset might not be "available" quite yet
-    await sleep(1000)
+    await sleep(5000)
     return await request.post(`${apiEndpoint}${config.INDEXER_LOCATION}/Accounts/${config.INDEXER_ACCOUNT_ID}/Videos`, requestOptions)
 
 }
