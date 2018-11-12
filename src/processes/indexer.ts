@@ -82,8 +82,8 @@ async function uploadVideo(options: WorkflowOptions) {
             privacy: 'Public'
         }
     }
-    // The asset might not be "available" quite yet
-    await sleep(5000)
+    // The asset might not be "available" quite yet  - 30 seconds was too little.
+    await sleep(60000)
     return await request.post(`${apiEndpoint}${config.INDEXER_LOCATION}/Accounts/${config.INDEXER_ACCOUNT_ID}/Videos`, requestOptions)
 
 }
